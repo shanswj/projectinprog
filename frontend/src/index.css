@@ -5,87 +5,249 @@
 }
 
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #0f0f1a;
-  color: #eee;
+ font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #f5f5f5;
+  color: #1a1a1a;
   min-height: 100vh;
 }
 
-/* Reusable page wrapper */
+/* ─── PAGE WRAPPER ─── */
 .page {
   max-width: 1100px;
   margin: 0 auto;
   padding: 2rem;
 }
 
-/* Card style used across multiple pages */
+.customer-page {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  min-height: 100vh;
+}
+
+/* ─── CARDS ─── */
 .card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  border: 1px solid #f0f0f0;
+}
+
+.customer-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+/* ─── INPUTS ─── */
+input, select, textarea {
+  width: 100%;
+  padding: 0.75rem;
+  margin: 0.3rem 0 1rem 0;
+  border-radius: 10px;
+  border: 1.5px solid #e8e8e8;
+  background: #fafafa;
+  color: #1a1a1a;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #1a1a2e;
+}
+
+label {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* ─── BUTTONS ─── */
+.btn {
+  background: #1a1a2e;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  width: 100%;
+  margin-top: 0.5rem;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.btn:hover { opacity: 0.85; }
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid #1a1a2e;
+  color: #1a1a2e;
+}
+
+.btn-outline:hover { opacity: 0.7; }
+
+.btn-red {
+  background: #e74c3c;
+}
+
+/* ─── NAVBAR (light) ─── */
+.light-nav {
+  background: white;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.light-nav a {
+  color: #1a1a1a;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.light-nav a:hover { color: #555; }
+
+/* ─── PUNCH CARD ─── */
+.punch-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.6rem;
+  margin: 1.2rem 0;
+}
+
+.punch {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #e8e8e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: #aaa;
+}
+
+.punch.filled {
+  background: #f0a500;
+  color: white;
+}
+
+.punch.free {
+  background: #27ae60;
+  color: white;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+/* ─── STATS ─── */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.stat-box {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.stat-box .stat-num {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #1a1a1a;
+}
+
+.stat-box .stat-label {
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 0.2rem;
+}
+
+/* ─── HISTORY ITEMS ─── */
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #f5f5f5;
+  color: #1a1a1a;
+}
+
+.history-item:last-child { border-bottom: none; }
+.history-item .hi-left { display: flex; align-items: center; gap: 0.6rem; }
+.history-item .hi-label { font-size: 0.9rem; font-weight: 500; }
+.history-item .hi-date { font-size: 0.78rem; color: #aaa; }
+
+/* ─── BADGES ─── */
+.badge {
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: bold;
+}
+
+.badge-pending   { background: #fff3cd; color: #856404; }
+.badge-confirmed { background: #d1f3e0; color: #155724; }
+.badge-completed { background: linear-gradient(135deg, #6b7fa3, #4a5f8a); color: white; }
+.badge-cancelled { background: #fde8e8; color: #842029; }
+
+/* ─── FREE BANNER ─── */
+.free-banner {
+  background: #e8f8ee;
+  border: 1.5px solid #27ae60;
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #1e7e45;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+/* ─── MESSAGES ─── */
+.error   { color: #e74c3c; margin: 0.5rem 0; font-size: 0.9rem; }
+.success { color: #27ae60; margin: 0.5rem 0; font-size: 0.9rem; }
+
+/* ─── GRIDS ─── */
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+
+/* ─── ADMIN DARK OVERRIDES ─── */
+.admin-page {
+  background: #0f0f1a;
+  color: #eee;
+  min-height: 100vh;
+}
+
+.admin-card {
   background: #1a1a2e;
   border-radius: 10px;
   padding: 1.5rem;
   margin-bottom: 1rem;
   border: 1px solid #2a2a4a;
+  color: #eee;
 }
 
-/* Input and form styles */
-input, select, textarea {
-  width: 100%;
-  padding: 0.7rem;
-  margin: 0.4rem 0 1rem 0;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background: #0f0f1a;
-  color: white;
-  font-size: 1rem;
-}
-
-label {
-  font-size: 0.9rem;
-  color: #aaa;
-}
-
-/* Primary button */
-.btn {
-  background: #e94560;
-  color: white;
-  border: none;
-  padding: 0.7rem 1.5rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  width: 100%;
-  margin-top: 0.5rem;
-}
-
-.btn:hover { background: #c73652; }
-
-.btn-outline {
-  background: transparent;
-  border: 1px solid #e94560;
-  color: #e94560;
-}
-
-/* Status badge colors */
-.badge {
-  padding: 0.3rem 0.7rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: bold;
-}
-.badge-pending   { background: #f39c12; color: #000; }
-.badge-confirmed { background: #27ae60; color: #fff; }
-.badge-completed { background: #2980b9; color: #fff; }
-.badge-cancelled { background: #c0392b; color: #fff; }
-
-/* Error and success messages */
-.error   { color: #e94560; margin: 0.5rem 0; font-size: 0.9rem; }
-.success { color: #27ae60; margin: 0.5rem 0; font-size: 0.9rem; }
-
-/* Grid layouts */
-.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
-
-/* Responsive */
+/* ─── RESPONSIVE ─── */
 @media (max-width: 600px) {
   .page { padding: 1rem; }
+  .customer-page { padding: 1rem; }
 }

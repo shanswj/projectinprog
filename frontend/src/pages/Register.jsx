@@ -30,8 +30,11 @@ const Register = () => {
   return (
     <div style={styles.wrapper}>
       <div style={styles.box}>
-        <h2 style={{ marginBottom: '0.3rem' }}>Create Account 🚗</h2>
-        <p style={{ color: '#aaa', marginBottom: '1.5rem' }}>Start booking your car washes</p>
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+          <span style={{ fontSize: '2.5rem' }}>🚗</span>
+          <h2 style={{ marginTop: '0.5rem', fontSize: '1.4rem', fontWeight: '700' }}>Create account</h2>
+          <p style={{ color: '#888', fontSize: '0.9rem', marginTop: '0.3rem' }}>Start booking your car washes</p>
+        </div>
 
         {error && <p className="error">{error}</p>}
 
@@ -53,8 +56,11 @@ const Register = () => {
           </button>
         </form>
 
-        <p style={{ marginTop: '1rem', textAlign: 'center', color: '#aaa' }}>
-          Already have an account? <Link to="/login" style={{ color: '#e94560' }}>Login</Link>
+        <p style={{ marginTop: '1.2rem', textAlign: 'center', color: '#888', fontSize: '0.9rem' }}>
+          Already have an account?{' '}
+          <Link to="/login" style={{ color: '#1a1a2e', fontWeight: '600', textDecoration: 'none' }}>
+            Login
+          </Link>
         </p>
       </div>
     </div>
@@ -62,8 +68,15 @@ const Register = () => {
 }
 
 const styles = {
-  wrapper: { display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', padding: '2rem' },
-  box: { background: '#1a1a2e', padding: '2.5rem', borderRadius: '12px', width: '100%', maxWidth: '420px', border: '1px solid #2a2a4a' }
+  wrapper: {
+    display: 'flex', justifyContent: 'center', alignItems: 'center',
+    minHeight: '80vh', padding: '2rem', background: '#f5f5f5'
+  },
+  box: {
+    background: 'white', padding: '2.5rem', borderRadius: '16px',
+    width: '100%', maxWidth: '400px',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
+  }
 }
 
 export default Register

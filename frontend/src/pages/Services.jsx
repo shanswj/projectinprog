@@ -3,90 +3,59 @@ import API from '../api/axios'
 
 const Services = () => {
   const [services, setServices] = useState([])
-  const [category, setCategory] = useState('')   // filter state
-  const [search, setSearch] = useState('')       // search state
+  const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
 
-  // Fetch services whenever filter or search changes
   useEffect(() => {
     const fetchServices = async () => {
       try {
         setLoading(true)
-        // Build query string based on what the user typed
         const params = {}
-        if (category) params.category = category
         if (search) params.name = search
-
-        const res = await API.get('/services', { params })  // GET /api/services?category=...&name=...
+        const res = await API.get('/services', { params })
         setServices(res.data)
       } catch (err) {
-        setError('Could not load services.')
+        console.error(err)
       } finally {
         setLoading(false)
       }
     }
     fetchServices()
-  }, [category, search])  // re-run when category or search changes
+  }, [search])
 
   return (
-    <div className="page">
-      <h1 style={{ marginBottom: '0.5rem' }}>Our Services</h1>
-      <p style={{ color: '#aaa', marginBottom: '1.5rem' }}>Choose from our range of professional wash packages.</p>
+    <div style={{ background: '#f5f5f5', minHeight: '100vh' }}>
+      <div className="customer-page">
+        <h1 style={{ marginBottom: '0.3rem', color: '#1a1a1a' }}>Our Services ✨</h1>
+        <p style={{ color: '#888', marginBottom: '1.2rem', fontSize: '0.9rem' }}>View our range of services with prices.</p>
 
-      {/* Search and Filter Bar */}
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
-        <input
-          type="text"
-          placeholder="Search services..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{ flex: 1, minWidth: '200px', margin: 0 }}
-        />
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          style={{ flex: 1, minWidth: '150px', margin: 0 }}
-        >
-          <option value="">All Categories</option>
-          <option value="Exterior">Exterior</option>
-          <option value="Full">Full</option>
-          <option value="Premium">Premium</option>
-          <option value="Add-on">Add-on</option>
-        </select>
-      </div>
+        {loading && <p style={{ color: '#888' }}>Loading...</p>}
 
-      {loading && <p>Loading services...</p>}
-      {error && <p className="error">{error}</p>}
-
-      <div className="grid-2">
-        {services.map(service => (
-          <div className="card" key={service._id}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <h3>{service.name}</h3>
-              <span style={styles.categoryBadge}>{service.category}</span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+          {services.map(s => (
+            <div key={s._id} className="customer-card" style={{ padding: '1rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h3 style={{ color: '#1a1a1a', fontSize: '0.95rem', marginBottom: '0.2rem' }}>{s.name}</h3>
+                  <p style={{ color: '#888', fontSize: '0.82rem' }}>{s.description}</p>
+                </div>
+                <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: '1rem' }}>
+                  <p style={{ fontWeight: 'bold', color: '#118C4F', fontSize: '1rem' }}>RM {s.price}</p>
+                  <p style={{ color: '#aaa', fontSize: '0.78rem' }}>⏱ {s.duration} mins</p>
+                </div>
+              </div>
             </div>
-            <p style={{ color: '#aaa', margin: '0.5rem 0', fontSize: '0.9rem' }}>{service.description}</p>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
-              <span style={{ color: '#e94560', fontWeight: 'bold', fontSize: '1.2rem' }}>RM {service.price}</span>
-              <span style={{ color: '#aaa', fontSize: '0.9rem' }}>⏱ {service.duration} mins</span>
-            </div>
+          ))}
+        </div>
+
+        {!loading && services.length === 0 && (
+          <div className="customer-card" style={{ textAlign: 'center', color: '#aaa', padding: '2rem' }}>
+            No services found.
           </div>
-        ))}
+        )}
       </div>
-
-      {!loading && services.length === 0 && (
-        <p style={{ textAlign: 'center', color: '#aaa' }}>No services found.</p>
-      )}
     </div>
   )
-}
-
-const styles = {
-  categoryBadge: {
-    background: '#2a2a4a', padding: '0.2rem 0.6rem',
-    borderRadius: '20px', fontSize: '0.75rem', color: '#aaa'
-  }
 }
 
 export default Services

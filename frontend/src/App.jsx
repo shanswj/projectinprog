@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { AuthProvider } from './context/AuthContext'
+import { AuthProvider, useAuth } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Navbar from './components/Navbar'
+import CustomerLayout from './components/CustomerLayout'
 
-// Import all pages
 import Home from './pages/Home'
+import CustomerHome from './pages/CustomerHome'
 import Services from './pages/Services'
 import BookNow from './pages/BookNow'
 import MyBookings from './pages/MyBookings'
@@ -14,36 +15,59 @@ import Register from './pages/Register'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminManage from './pages/admin/AdminManage'
 
+// Smart home — customers see punch card, guests see landing page
+const SmartHome = () => {
+  const { user } = useAuth()
+  if (user && user.role === 'customer') {
+    return <CustomerLayout><CustomerHome /></CustomerLayout>
+  }
+  return <><Navbar /><Home /></>
+}
+
 function App() {
   return (
-    // AuthProvider wraps everything so every page can access the logged-in user
     <AuthProvider>
       <BrowserRouter>
-        <Navbar />
         <Routes>
-          {/* Public routes — anyone can visit */}
-          <Route path="/" element={<Home />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          {/* Home */}
+          <Route path="/" element={<SmartHome />} />
 
-          {/* Protected routes — must be logged in */}
+          {/* Public */}
+          <Route path="/login"    element={<><Navbar /><Login /></>} />
+          <Route path="/register" element={<><Navbar /><Register /></>} />
+
+          {/* Customer routes — all wrapped with CustomerLayout (bottom tabs) */}
+          <Route path="/services" element={
+            <ProtectedRoute>
+              <CustomerLayout><Services /></CustomerLayout>
+            </ProtectedRoute>
+          } />
           <Route path="/book" element={
-            <ProtectedRoute><BookNow /></ProtectedRoute>
+            <ProtectedRoute>
+              <CustomerLayout><BookNow /></CustomerLayout>
+            </ProtectedRoute>
           } />
           <Route path="/my-bookings" element={
-            <ProtectedRoute><MyBookings /></ProtectedRoute>
+            <ProtectedRoute>
+              <CustomerLayout><MyBookings /></CustomerLayout>
+            </ProtectedRoute>
           } />
           <Route path="/my-vehicles" element={
-            <ProtectedRoute><MyVehicles /></ProtectedRoute>
+            <ProtectedRoute>
+              <CustomerLayout><MyVehicles /></CustomerLayout>
+            </ProtectedRoute>
           } />
 
-          {/* Admin only routes */}
+          {/* Admin routes — dark navbar, no bottom tabs */}
           <Route path="/admin" element={
-            <ProtectedRoute adminOnly={true}><AdminDashboard /></ProtectedRoute>
+            <ProtectedRoute adminOnly={true}>
+              <><Navbar /><AdminDashboard /></>
+            </ProtectedRoute>
           } />
           <Route path="/admin/manage" element={
-            <ProtectedRoute adminOnly={true}><AdminManage /></ProtectedRoute>
+            <ProtectedRoute adminOnly={true}>
+              <><Navbar /><AdminManage /></>
+            </ProtectedRoute>
           } />
         </Routes>
       </BrowserRouter>

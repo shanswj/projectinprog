@@ -29,24 +29,29 @@ const userSchema = new mongoose.Schema({
     trim: true
   },
 
-  role: {
+role: {
     type: String,
-    enum: ['customer', 'admin'],   // only these two values are allowed
-    default: 'customer'            // new users are customers by default
-  }
+    enum: ['customer', 'admin'],
+    default: 'customer'
+  },
 
+  punchCardResets: {
+  type: Number,
+  default: 0   // admin increments this when resetting a customer's card
+},
+
+freeWashesRedeemed: {
+  type: Number,
+  default: 0  // tracks how many free washes customer has used
+},
 }, {
   timestamps: true   // automatically adds createdAt and updatedAt fields
 })
 
 // This runs BEFORE a user is saved — it scrambles the password
-userSchema.pre('save', async function (next) {
-  // If the password wasn't changed, skip hashing (avoids double-hashing)
-  if (!this.isModified('password')) return next()
-
-  // bcrypt.hash() scrambles the password — the "10" is how strong the scramble is
+userSchema.pre('save', async function () {
+  if (!this.isModified('password')) return
   this.password = await bcrypt.hash(this.password, 10)
-  next()
 })
 
 // A method on every user — compares a typed password to the saved scrambled one

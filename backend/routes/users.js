@@ -36,9 +36,10 @@ router.post('/register', async (req, res) => {
       user: { id: user._id, name: user.name, email: user.email, role: user.role }
     })
 
-  } catch (error) {
-    res.status(500).json({ message: 'Registration failed.', error: error.message })
-  }
+} catch (error) {
+  console.error('REGISTER ERROR:', error)  // add this line
+  res.status(500).json({ message: 'Registration failed.', error: error.message })
+}
 })
 
 // POST /api/users/login
@@ -110,4 +111,33 @@ router.delete('/:id', protect, adminOnly, async (req, res) => {
   }
 })
 
+// PUT /api/users/:id/reset-card — admin resets a customer's punch card
+router.put('/:id/reset-card', protect, adminOnly, async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { punchCardResets: 1 } },  // $inc increments by 1
+      { new: true }
+    )
+    if (!user) return res.status(404).json({ message: 'User not found.' })
+    res.json({ message: 'Card reset successfully.', punchCardResets: user.punchCardResets })
+  } catch (error) {
+    res.status(500).json({ message: 'Could not reset card.', error: error.message })
+  }
+})
+
+// PUT /api/users/:id/redeem-free — admin marks a free wash as used
+router.put('/:id/redeem-free', protect, adminOnly, async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { freeWashesRedeemed: 1 } },
+      { new: true }
+    )
+    if (!user) return res.status(404).json({ message: 'User not found.' })
+    res.json({ message: 'Free wash marked as redeemed.', freeWashesRedeemed: user.freeWashesRedeemed })
+  } catch (error) {
+    res.status(500).json({ message: 'Could not redeem.', error: error.message })
+  }
+})
 module.exports = router

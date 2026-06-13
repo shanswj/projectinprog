@@ -47,7 +47,6 @@ const MyBookings = () => {
         style={{ maxWidth: '200px', marginBottom: '1.5rem' }}
       >
         <option value="">All Statuses</option>
-        <option value="pending">Pending</option>
         <option value="confirmed">Confirmed</option>
         <option value="completed">Completed</option>
         <option value="cancelled">Cancelled</option>
@@ -70,8 +69,7 @@ const MyBookings = () => {
               {b.notes && <p style={{ color: '#888', fontSize: '0.85rem', marginTop: '0.3rem' }}>📝 {b.notes}</p>}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
-              <span className={`badge badge-${b.status}`}>{b.status}</span>
-              <span style={{ color: '#e94560', fontWeight: 'bold' }}>RM {b.service?.price}</span>
+              <span className={`badge badge-${b.status}`} style={{ textTransform: 'capitalize' }}>{b.status}</span>
             </div>
           </div>
           {b.status === 'pending' && (

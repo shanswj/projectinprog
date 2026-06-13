@@ -24,11 +24,10 @@ const serviceSchema = new mongoose.Schema({
     required: [true, 'Duration is required']
   },
 
-  category: {
-    type: String,
-    enum: ['Exterior', 'Full', 'Premium', 'Add-on'],  // only 4 valid options
-    required: [true, 'Category is required']
-  },
+category: {
+  type: String,
+  default: 'General'  // no longer required, defaults if not sent
+},
 
   isAvailable: {
     type: Boolean,

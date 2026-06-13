@@ -7,36 +7,34 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout()
-    navigate('/')  // send to home after logout
+    navigate('/login')
+  }
+
+  if (user?.role === 'admin') {
+    return (
+      <nav style={styles.nav}>
+        <Link to="/admin" style={styles.brand}>🚗 Sudsnautica</Link>
+        <div style={{ display: 'flex', gap: '1.2rem', alignItems: 'center' }}>
+          <Link to="/admin/manage" style={styles.link}>Manage</Link>
+          <button onClick={handleLogout} style={styles.logoutBtn}>
+            Logout ({user.name})
+          </button>
+        </div>
+      </nav>
+    )
   }
 
   return (
     <nav style={styles.nav}>
-      <Link to="/" style={styles.brand}>🚗 Gleamorous ✨ </Link>
-
-      <div style={styles.links}>
-        <Link to="/" style={styles.link}>Home</Link>
-        <Link to="/services" style={styles.link}>Services</Link>
-
-        {/* Only show these links if logged in */}
-        {user && <Link to="/book" style={styles.link}>Book Now</Link>}
-        {user && <Link to="/my-bookings" style={styles.link}>My Bookings</Link>}
-        {user && <Link to="/my-vehicles" style={styles.link}>My Vehicles</Link>}
-
-        {/* Only show admin links if user is admin */}
-        {user?.role === 'admin' && <Link to="/admin" style={styles.link}>Dashboard</Link>}
-        {user?.role === 'admin' && <Link to="/admin/manage" style={styles.link}>Manage</Link>}
-
-        {/* Show login/register if NOT logged in, show logout if logged in */}
+      <Link to="/" style={styles.brand}>🚗 Sudsnautica</Link>
+      <div style={{ display: 'flex', gap: '1.2rem', alignItems: 'center' }}>
         {!user ? (
           <>
             <Link to="/login" style={styles.link}>Login</Link>
             <Link to="/register" style={styles.link}>Register</Link>
           </>
         ) : (
-          <button onClick={handleLogout} style={styles.logoutBtn}>
-            Logout ({user.name})
-          </button>
+          <button onClick={handleLogout} style={styles.logoutBtn}>Logout</button>
         )}
       </div>
     </nav>
@@ -45,16 +43,15 @@ const Navbar = () => {
 
 const styles = {
   nav: {
+    background: 'white', padding: '1rem 1.5rem',
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-    padding: '1rem 2rem', backgroundColor: '#1a1a2e', color: 'white',
-    position: 'sticky', top: 0, zIndex: 100
+    boxShadow: '0 1px 4px rgba(0,0,0,0.07)', position: 'sticky', top: 0, zIndex: 100
   },
-  brand: { color: '#e94560', fontSize: '1.5rem', fontWeight: 'bold', textDecoration: 'none' },
-  links: { display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' },
-  link: { color: 'white', textDecoration: 'none', fontSize: '0.95rem' },
+  brand: { fontWeight: 'bold', fontSize: '1.1rem', textDecoration: 'none', color: '#1a1a1a' },
+  link: { color: '#1a1a1a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: '500' },
   logoutBtn: {
-    background: '#e94560', color: 'white', border: 'none',
-    padding: '0.4rem 0.8rem', borderRadius: '4px', cursor: 'pointer'
+    background: 'none', border: '1.5px solid #ddd', padding: '0.35rem 0.9rem',
+    borderRadius: '20px', cursor: 'pointer', fontSize: '0.85rem', color: '#1a1a1a'
   }
 }
 

@@ -39,7 +39,7 @@ const BookNow = () => {
     <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
       <div style={styles.box}>
         <h2 style={{ marginBottom: '0.3rem' }}>Book a Wash 📅</h2>
-        <p style={{ color: '#aaa', marginBottom: '1.5rem' }}>Fill in the details below</p>
+        <p style={{ color: 'black', marginBottom: '1.5rem' }}>Fill in the details below</p>
 
         {error && <p className="error">{error}</p>}
 
@@ -65,7 +65,7 @@ const BookNow = () => {
           </select>
 
           <label>Date</label>
-          <input type="date" name="date" value={form.date} onChange={handleChange} min={today} required />
+          <input type="date" name="date" value={form.date} onChange={handleChange} min={today} required style={{ cursor: 'pointer'}}onClick={(e) => e.target.showPicker()}  />
 
           <label>Preferred Time</label>
           <select name="time" value={form.time} onChange={handleChange} required>
@@ -78,7 +78,7 @@ const BookNow = () => {
           <label>Notes (optional)</label>
           <textarea name="notes" value={form.notes} onChange={handleChange} rows={3} placeholder="e.g. Please focus on the rims" />
 
-          <button type="submit" className="btn" disabled={loading || vehicles.length === 0}>
+          <button type="submit" className="btn" disabled={loading || vehicles.length === 0}style={{ background:'linear-gradient(135deg, #6b7fa3, #4a5f8a)' }}>
             {loading ? 'Booking...' : 'Confirm Booking'}
           </button>
         </form>
@@ -89,7 +89,7 @@ const BookNow = () => {
 
 const styles = {
   box: {
-    background: '#1a1a2e', padding: '2.5rem', borderRadius: '12px',
+    background: 'white', padding: '2.5rem', borderRadius: '12px',
     width: '100%', maxWidth: '520px', border: '1px solid #2a2a4a'
   }
 }

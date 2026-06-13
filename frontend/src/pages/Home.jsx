@@ -1,81 +1,77 @@
 import { Link } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
 
 const Home = () => {
-  const { user } = useAuth()
-
   return (
-    <div>
-      {/* Hero Section */}
+    <div style={{ background: '#f5f5f5', minHeight: '100vh' }}>
+
+      {/* Hero */}
       <div style={styles.hero}>
-        <h1 style={styles.heroTitle}>🚗 Gleamorous ✨ </h1>
+        <span style={{ fontSize: '3rem' }}>🚗</span>
+        <h1 style={styles.heroTitle}>Sudsnautica</h1>
         <p style={styles.heroSub}>Professional car wash services, booked in seconds.</p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link to="/services" style={styles.btnPrimary}>View Services</Link>
-          {user
-            ? <Link to="/book" style={styles.btnOutline}>Book Now</Link>
-            : <Link to="/register" style={styles.btnOutline}>Get Started</Link>
-          }
+          <Link to="/register" style={styles.btnDark}>Get Started</Link>
+          <Link to="/login" style={styles.btnOutline}>Login</Link>
         </div>
       </div>
 
-      {/* Features Section */}
+      {/* Features */}
       <div className="page">
-        <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>Why Choose Us?</h2>
+        <h2 style={{ textAlign: 'center', marginBottom: '2rem', fontSize: '1.4rem' }}>Why Choose Us?</h2>
         <div className="grid-3">
           {features.map((f, i) => (
             <div className="card" key={i} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '2.5rem' }}>{f.icon}</div>
-              <h3 style={{ margin: '0.5rem 0' }}>{f.title}</h3>
-              <p style={{ color: '#aaa', fontSize: '0.9rem' }}>{f.desc}</p>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>{f.icon}</div>
+              <h3 style={{ fontSize: '1rem', marginBottom: '0.4rem' }}>{f.title}</h3>
+              <p style={{ color: '#888', fontSize: '0.88rem' }}>{f.desc}</p>
             </div>
           ))}
         </div>
 
-        {/* Service Highlights */}
-        <h2 style={{ textAlign: 'center', margin: '2rem 0' }}>Our Packages</h2>
-        <div className="grid-2">
-          {packages.map((p, i) => (
-            <div className="card" key={i}>
-              <h3>{p.name}</h3>
-              <p style={{ color: '#aaa', margin: '0.5rem 0' }}>{p.desc}</p>
-              <p style={{ color: '#e94560', fontWeight: 'bold' }}>From RM {p.price}</p>
-            </div>
-          ))}
-        </div>
+        <h2 style={{ textAlign: 'center', margin: '2rem 0 1.5rem', fontSize: '1.4rem' }}>Our Packages</h2>
+       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
+  {packages.map((p, i) => (
+    <div className="card" key={i}>
+      <h3 style={{ marginBottom: '0.3rem', fontSize: '0.95rem' }}>{p.name}</h3>
+      <p style={{ color: '#888', fontSize: '0.82rem', marginBottom: '0.8rem' }}>{p.desc}</p>
+      <p style={{ fontWeight: 'bold', color: '#1a1a2e', fontSize: '0.9rem' }}>From RM {p.price}</p>
+    </div>
+  ))}
+</div>
       </div>
     </div>
   )
 }
 
 const features = [
-  { icon: '⚡', title: 'Fast Service', desc: 'Most washes completed in under 45 minutes.' },
-  { icon: '👍', title: 'Quality Products', desc: 'Premium soaps and equipment used on every car.' },
-  { icon: '📱', title: 'Easy Booking', desc: 'Book, manage and track your wash from your phone.' },
+  { icon: '⚡', title: 'Fast Service', desc: 'Most washes completed under 45 minutes.' },
+  { icon: '✨', title: 'Quality Products', desc: 'Premium soaps and equipment on every car.' },
+  { icon: '📱', title: 'Easy Booking', desc: 'Book and track your wash from your phone.' },
 ]
 
 const packages = [
-  { name: '🚿 Exterior Wash', desc: 'Wash, Rinse, and Dry.', price: '15' },
-  { name: '🧹 Full Interior', desc: 'Vacuum, Wipe down, and Nano Mist.', price: '35' },
-  { name: '💎 Premium Detail', desc: 'Exterior/Interior Water Wax + Polish.', price: '80' },
+  { name: '🚿 Exterior Wash', desc: 'Body wash, rinse, and dry.', price: '15' },
+  { name: '🧹 Interior Vacuum', desc: 'Vacuum & wipe down.', price: '15' },
+  { name: '💎 Premium Detail', desc: 'Full exterior + interior + wax.', price: '80' },
+  { name: '➕ Add-Ons', desc: 'Tyre shine, engine wash,etc.', price: '100' },
 ]
 
 const styles = {
   hero: {
-    background: 'linear-gradient(135deg, #1a1a2e, #16213e)',
     padding: '5rem 2rem',
     textAlign: 'center',
-    borderBottom: '1px solid #2a2a4a'
+    background: 'white',
+    borderBottom: '1px solid #eee'
   },
-  heroTitle: { fontSize: '3rem', color: '#e94560', marginBottom: '1rem' },
-  heroSub: { fontSize: '1.2rem', color: '#aaa', marginBottom: '2rem' },
-  btnPrimary: {
-    background: '#e94560', color: 'white', padding: '0.8rem 2rem',
-    borderRadius: '6px', textDecoration: 'none', fontWeight: 'bold'
+  heroTitle: { fontSize: '2.5rem', fontWeight: '800', margin: '0.5rem 0', color: '#1a1a2e' },
+  heroSub: { color: '#888', fontSize: '1.1rem', marginBottom: '2rem' },
+  btnDark: {
+    background: '#1a1a2e', color: 'white', padding: '0.8rem 2rem',
+    borderRadius: '10px', textDecoration: 'none', fontWeight: '600'
   },
   btnOutline: {
-    border: '2px solid #e94560', color: '#e94560', padding: '0.8rem 2rem',
-    borderRadius: '6px', textDecoration: 'none', fontWeight: 'bold'
+    border: '2px solid #1a1a2e', color: '#1a1a2e', padding: '0.8rem 2rem',
+    borderRadius: '10px', textDecoration: 'none', fontWeight: '600'
   }
 }
 

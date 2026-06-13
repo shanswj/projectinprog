@@ -1,79 +1,138 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import API from '../../api/axios'
 
 const AdminDashboard = () => {
-  const [stats, setStats] = useState({ total: 0, pending: 0, confirmed: 0, completed: 0 })
-  const [recentBookings, setRecentBookings] = useState([])
+  const [allBookings, setAllBookings] = useState([])
+  const [filtered, setFiltered] = useState([])
+  const [activeFilter, setActiveFilter] = useState('all')
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await API.get('/bookings')  // admin gets all bookings
-        const all = res.data
-
-        // Calculate stats from the bookings array
-        setStats({
-          total: all.length,
-          pending: all.filter(b => b.status === 'pending').length,
-          confirmed: all.filter(b => b.status === 'confirmed').length,
-          completed: all.filter(b => b.status === 'completed').length,
-        })
-
-        // Show only the 5 most recent
-        setRecentBookings(all.slice(0, 5))
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
+  const fetchData = async () => {
+    try {
+      const res = await API.get('/bookings')
+      setAllBookings(res.data)
+      setFiltered(res.data)
+      setActiveFilter('all')
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setLoading(false)
     }
-    fetchData()
-  }, [])
+  }
 
-  const statCards = [
-    { label: 'Total Bookings', value: stats.total, color: '#3498db' },
-    { label: 'Pending', value: stats.pending, color: '#f39c12' },
-    { label: 'Confirmed', value: stats.confirmed, color: '#27ae60' },
-    { label: 'Completed', value: stats.completed, color: '#9b59b6' },
+  useEffect(() => { fetchData() }, [])
+
+  const handleFilter = (status) => {
+    setActiveFilter(status)
+    if (status === 'all') {
+      setFiltered(allBookings)
+    } else {
+      setFiltered(allBookings.filter(b => b.status === status)) 
+    }
+  }
+
+  const updateBookingStatus = async (id, status) => {
+    try {
+      await API.put(`/bookings/${id}`, { status })
+      await fetchData()
+    } catch (err) {
+      alert('Could not update booking.')
+    }
+  }
+
+  const stats = [
+    { label: 'Total Bookings', value: allBookings.length },
+    { label: 'Completed',      value: allBookings.filter(b => b.status === 'completed').length },
+    { label: 'Cancelled',      value: allBookings.filter(b => b.status === 'cancelled').length },
   ]
 
-  return (
-    <div className="page">
-      <h1 style={{ marginBottom: '0.3rem' }}>Admin Dashboard 📊</h1>
-      <p style={{ color: '#aaa', marginBottom: '2rem' }}>Overview of all business activity.</p>
+  const filterButtons = ['all', 'confirmed', 'completed', 'cancelled']
 
-      {loading ? <p>Loading...</p> : (
-        <>
-          {/* Stats Cards */}
-          <div className="grid-2" style={{ marginBottom: '2rem' }}>
-            {statCards.map((s, i) => (
-              <div className="card" key={i} style={{ borderLeft: `4px solid ${s.color}` }}>
-                <p style={{ color: '#aaa', fontSize: '0.9rem' }}>{s.label}</p>
-                <p style={{ fontSize: '2.5rem', fontWeight: 'bold', color: s.color }}>{s.value}</p>
+  return (
+    <div style={{ background: '#f5f5f5', minHeight: '100vh' }}>
+      <div className="page">
+        <h1 style={{ marginBottom: '0.3rem', color: '#1a1a1a' }}>Dashboard 📊</h1>
+        <p style={{ color: '#888', marginBottom: '2rem' }}>Overview of all business activity.</p>
+
+        {loading ? <p style={{ color: '#888' }}>Loading...</p> : (
+          <>
+            <div style={{
+              display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '1rem', marginBottom: '2rem'
+            }}>
+              {stats.map((s, i) => (
+                <div key={i} className="card" style={{ textAlign: 'center' }}>
+                  <p style={{ color: '#888', fontSize: '0.82rem', marginBottom: '0.4rem' }}>{s.label}</p>
+                  <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#1a1a1a' }}>{s.value}</p>
+                </div>
+              ))}
+            </div>
+
+            <h2 style={{ color: '#1a1a1a', fontSize: '1.1rem', marginBottom: '1rem' }}>Recent Bookings</h2>
+
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+              {filterButtons.map(f => (
+                <button key={f} onClick={() => handleFilter(f)} style={{
+                  padding: '0.4rem 1rem', borderRadius: '20px', cursor: 'pointer',
+                  border: '1.5px solid #ddd', fontSize: '0.82rem', fontWeight: '600',
+                  background: activeFilter === f ? '#1a1a2e' : 'white',
+                  color: activeFilter === f ? 'white' : '#1a1a1a',
+                  textTransform: 'capitalize'
+                }}>
+                  {f === 'all' ? 'All' : f}
+                </button>
+              ))}
+            </div>
+
+            {filtered.map(b => (
+              <div key={b._id} className="card" style={{
+  display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem'
+}}>
+                <div>
+                  <p style={{ fontWeight: 'bold', color: '#1a1a1a' }}>{b.customer?.name}</p>
+                  <p style={{ color: '#888', fontSize: '0.85rem' }}>
+                    {b.service?.name} · {b.date} {b.time}
+                  </p>
+                  <p style={{ color: '#888', fontSize: '0.85rem' }}>🚘 {b.vehicle?.plateNumber}</p>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+                  <select
+  value={b.status}
+  onChange={e => updateBookingStatus(b._id, e.target.value)}
+  style={{
+    padding: '0.4rem 0.7rem',
+    borderRadius: '20px',
+    border: 'none',
+    fontSize: '0.82rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+    outline: 'none',
+    background:
+      b.status === 'completed' ? '#d1f3e0' :
+      b.status === 'confirmed' ? '#fff3cd' :
+      b.status === 'cancelled' ? '#fde8e8' : '#f0f0f0',
+    color:
+      b.status === 'completed' ? '#155724' :
+      b.status === 'confirmed' ? '#856404' :
+      b.status === 'cancelled' ? '#842029' : '#555',
+  }}
+>
+  <option value="confirmed">Confirmed</option>
+  <option value="completed">Completed</option>
+  <option value="cancelled">Cancelled</option>
+</select>
+                </div>
               </div>
             ))}
-          </div>
 
-          {/* Recent Bookings */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h2>Recent Bookings</h2>
-            <Link to="/admin/manage" style={{ color: '#e94560', textDecoration: 'none' }}>View All →</Link>
-          </div>
-
-          {recentBookings.map(b => (
-            <div className="card" key={b._id} style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-              <div>
-                <p style={{ fontWeight: 'bold' }}>{b.customer?.name}</p>
-                <p style={{ color: '#aaa', fontSize: '0.85rem' }}>{b.service?.name} • {b.date} {b.time}</p>
-                <p style={{ color: '#aaa', fontSize: '0.85rem' }}>🚘 {b.vehicle?.plateNumber}</p>
+            {filtered.length === 0 && (
+              <div className="card" style={{ textAlign: 'center', color: '#aaa', padding: '2rem' }}>
+                No bookings found.
               </div>
-              <span className={`badge badge-${b.status}`}>{b.status}</span>
-            </div>
-          ))}
-        </>
-      )}
+            )}
+          </>
+        )}
+      </div>
     </div>
   )
 }

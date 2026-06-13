@@ -10,21 +10,15 @@ const Login = () => {
   const { login } = useAuth()
   const navigate = useNavigate()
 
-  // Update form state when user types
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-    // ...form = keep existing values, [e.target.name] = update just the changed field
-  }
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
   const handleSubmit = async (e) => {
-    e.preventDefault()  // prevent page reload (default form behaviour)
+    e.preventDefault()
     setError('')
     setLoading(true)
     try {
       const res = await API.post('/users/login', form)
-      login(res.data.user, res.data.token)  // save to context + localStorage
-
-      // Redirect based on role
+      login(res.data.user, res.data.token)
       if (res.data.user.role === 'admin') {
         navigate('/admin')
       } else {
@@ -32,7 +26,6 @@ const Login = () => {
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.')
-      // err.response?.data?.message = the error message from your backend
     } finally {
       setLoading(false)
     }
@@ -41,8 +34,11 @@ const Login = () => {
   return (
     <div style={styles.wrapper}>
       <div style={styles.box}>
-        <h2 style={{ marginBottom: '0.3rem' }}>Welcome Back 👋</h2>
-        <p style={{ color: '#aaa', marginBottom: '1.5rem' }}>Log in to your account</p>
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+          <span style={{ fontSize: '2.5rem' }}>🚗</span>
+          <h2 style={{ marginTop: '0.5rem', fontSize: '1.4rem', fontWeight: '700' }}>Welcome back</h2>
+          <p style={{ color: '#888', fontSize: '0.9rem', marginTop: '0.3rem' }}>Log in to your account</p>
+        </div>
 
         {error && <p className="error">{error}</p>}
 
@@ -58,8 +54,11 @@ const Login = () => {
           </button>
         </form>
 
-        <p style={{ marginTop: '1rem', textAlign: 'center', color: '#aaa' }}>
-          Don't have an account? <Link to="/register" style={{ color: '#e94560' }}>Register</Link>
+        <p style={{ marginTop: '1.2rem', textAlign: 'center', color: '#888', fontSize: '0.9rem' }}>
+          Don't have an account?{' '}
+          <Link to="/register" style={{ color: '#1a1a2e', fontWeight: '600', textDecoration: 'none' }}>
+            Register
+          </Link>
         </p>
       </div>
     </div>
@@ -67,8 +66,15 @@ const Login = () => {
 }
 
 const styles = {
-  wrapper: { display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', padding: '2rem' },
-  box: { background: '#1a1a2e', padding: '2.5rem', borderRadius: '12px', width: '100%', maxWidth: '420px', border: '1px solid #2a2a4a' }
+  wrapper: {
+    display: 'flex', justifyContent: 'center', alignItems: 'center',
+    minHeight: '80vh', padding: '2rem', background: '#f5f5f5'
+  },
+  box: {
+    background: 'white', padding: '2.5rem', borderRadius: '16px',
+    width: '100%', maxWidth: '400px',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
+  }
 }
 
 export default Login

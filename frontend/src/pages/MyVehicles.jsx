@@ -78,7 +78,7 @@ const MyVehicles = () => {
               <input name="color" value={form.color} onChange={handleChange} placeholder="e.g. Silver" required />
             </div>
           </div>
-          <button type="submit" className="btn" style={{ marginTop: '0.5rem' }}>Add Vehicle</button>
+          <button type="submit" className="btn" style={{ background:'linear-gradient(135deg, #6b7fa3, #4a5f8a)', marginTop: '0.5rem' }}>Add Vehicle</button>
         </form>
       </div>
 
